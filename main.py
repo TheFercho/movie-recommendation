@@ -5,6 +5,10 @@ from datetime import datetime
 import calendar
 from dateutil.parser import parse
 
+###########################################
+# Link render https://ferflix.onrender.com
+###########################################
+
 app=FastAPI(title='Proyecto Individual_Peliculas',
             description='PI_ML_OPS_DataPT-01',
             version='1.0.1')
@@ -215,4 +219,4 @@ async def get_director_3(nombre_director):
     exito_director = peliculas['return'].sum()
     costo = peliculas['budget']
     #return {'films':peliculas, 'exito': exito_director, 'costo': costo}
-    return (peliculas_lista ,exito_director,costo)
+    return peliculas_lista ,exito_director,costo
