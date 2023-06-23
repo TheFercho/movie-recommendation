@@ -219,4 +219,4 @@ async def get_director_3(nombre_director):
     exito_director = peliculas['return'].sum()
     costo = peliculas['budget']
     #return {'films':peliculas, 'exito': exito_director, 'costo': costo}
-    return {peliculas_lista ,exito_director,costo}
+    return {'films':peliculas, 'exito': exito_director, 'costo': costo}
