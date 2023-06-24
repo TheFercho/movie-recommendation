@@ -19,7 +19,7 @@ async def index():
 
 
 df = pd.read_csv('merged_movies_credits.csv',encoding='utf-8') 
-
+dfML = pd.read_csv('ML_dataset.csv',encoding='utf-8')
 
 
 # Cambiamos las fechas de la columna 'release_date' a formato AAAA-mm-dd, ignorando con 'coerce'
@@ -220,3 +220,61 @@ async def get_director_3(nombre_director):
     costo = peliculas['budget']
     #return {'films':peliculas, 'exito': exito_director, 'costo': costo}
     return {'films':peliculas, 'exito': exito_director, 'costo': costo}
+
+##################################################################################################
+
+# Funcion ML :
+
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.decomposition import PCA
+from sklearn.neighbors import NearestNeighbors
+
+@app.get("/recomendacion_4{titulo}")
+async def recomendacion_4(titulo):
+    # Cargar el dataframe
+        
+    # Obtener el índice de la película que coincide con el título ingresado
+    indices = pd.Series(dfML.index, index=dfML['title']).drop_duplicates()
+    idx = indices[titulo]
+    
+    # Seleccionar las características relevantes para el algoritmo KNN
+    features = ['popularity', 'vote_average', 'vote_count', 'genres']
+    X = dfML[features]
+    
+    # Convertir las listas en columnas binarias utilizando MultiLabelBinarizer
+    mlb = MultiLabelBinarizer()
+    encoded_genres = pd.DataFrame(mlb.fit_transform(X['genres']), columns=mlb.classes_, index=X.index)
+    
+    # Convertir los nombres de características numéricas a cadenas
+    numeric_features = X.drop('genres', axis=1)
+    numeric_features.columns = numeric_features.columns.astype(str)
+    
+    # Aplicar PCA para reducir la dimensionalidad
+    pca = PCA(n_components=0.9)  # Mantenemos el 90% de la varianza explicada
+    encoded_genres_pca = pca.fit_transform(encoded_genres)
+    
+    # Concatenar las características numéricas y las características transformadas por PCA
+    X = pd.concat([numeric_features, pd.DataFrame(encoded_genres_pca)], axis=1)
+    
+    # Normalizar las características
+    X = (X - X.mean()) / X.std()
+    
+    # Crear una instancia del algoritmo KNN
+    knn = NearestNeighbors(n_neighbors=6)  # Consideramos 6 vecinos, incluyendo la película seleccionada
+    
+    # Resolvemos el siguiente error con la recomendacion de la propia libreria:  
+    # Feature names are only supported if all input features have string names, but your input has ['int', 'str'] 
+    # as feature name / column name types. If you want feature names to be stored and validated, 
+    # you must convert them all to strings, by using: =>>>>> X.columns = X.columns.astype(str)
+    X.columns = X.columns.astype(str)
+    
+    # Entrenar el modelo KNN
+    knn.fit(X)
+    
+    # Obtener la distancia y los índices de los vecinos más cercanos
+    distances, indices = knn.kneighbors(X.iloc[idx].values.reshape(1, -1))
+    
+    # Obtener los títulos de las películas más similares (excluyendo la película seleccionada)
+    similar_movies = dfML['title'].iloc[indices[0][1:6]]
+    
+    return {'recomendacion': similar_movies}
