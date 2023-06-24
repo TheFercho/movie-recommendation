@@ -4,6 +4,10 @@ from pydantic import BaseModel
 from datetime import datetime
 import calendar
 from dateutil.parser import parse
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.decomposition import PCA
+from sklearn.neighbors import NearestNeighbors
+
 
 ###########################################
 # Link render https://ferflix.onrender.com
@@ -225,9 +229,9 @@ async def get_director_3(nombre_director):
 
 # Funcion ML :
 
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.decomposition import PCA
-from sklearn.neighbors import NearestNeighbors
+#from sklearn.preprocessing import MultiLabelBinarizer
+#from sklearn.decomposition import PCA
+#from sklearn.neighbors import NearestNeighbors
 
 @app.get("/recomendacion_4{titulo}")
 async def recomendacion_4(titulo):
