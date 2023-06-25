@@ -4,7 +4,9 @@ from pydantic import BaseModel
 from datetime import datetime
 import calendar
 from dateutil.parser import parse
-
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.decomposition import PCA
+from sklearn.neighbors import NearestNeighbors
 
 
 ###########################################
@@ -235,9 +237,14 @@ from sklearn.neighbors import NearestNeighbors
 async def recomendacion_4(titulo):
     # Cargar el dataframe
         
-    # Obtener el índice de la película que coincide con el título ingresado
-    indices = pd.Series(dfML.index, index=dfML['title']).drop_duplicates()
-    idx = indices[titulo]
+     # Obtener el índice de la película que coincide con el título ingresado (case insensitive)
+    indices = pd.Series(dfML.index, index=dfML['title'].str.lower()).drop_duplicates()
+    titulo_lower = titulo.lower()
+    
+    if titulo_lower not in indices:
+        return "Título no encontrado"
+    
+    idx = indices[titulo_lower]
     
     # Seleccionar las características relevantes para el algoritmo KNN
     features = ['popularity', 'vote_average', 'vote_count', 'genres']
