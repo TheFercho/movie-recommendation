@@ -279,4 +279,4 @@ async def recomendacion_4(titulo):
     # Obtener los títulos de las películas más similares (excluyendo la película seleccionada)
     similar_movies = dfML['title'].iloc[indices[0][1:6]]
     
-    return {'recomendacion': similar_movies}
+    return similar_movies
