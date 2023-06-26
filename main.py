@@ -22,8 +22,8 @@ async def index():
     return {'API TheFercho'}
 
 
-df = pd.read_csv('merged_movies_credits.csv',encoding='utf-8') 
-dfML = pd.read_csv('ML_dataset.csv',encoding='utf-8')
+df = pd.read_csv('./datasets/merged_movies_credits.csv',encoding='utf-8') 
+dfML = pd.read_csv('./datasets/ML_dataset.csv',encoding='utf-8')
 
 
 # Cambiamos las fechas de la columna 'release_date' a formato AAAA-mm-dd, ignorando con 'coerce'
