@@ -281,9 +281,9 @@ async def recomendacion_4(titulo):
     knn.fit(X)
     
     # Obtener la distancia y los índices de los vecinos más cercanos
-    distances, indices = knn.kneighbors(X.iloc[idx].values.reshape(1, -1))
+    distances, indic = knn.kneighbors(X.iloc[idx].values.reshape(1, -1))
     
     # Obtener los títulos de las películas más similares (excluyendo la película seleccionada)
-    similar_movies = dfML['title'].iloc[indices[0][1:6]]
+    similar_movies = dfML['title'].iloc[indic[0][1:6]]
     
     return similar_movies
