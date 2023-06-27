@@ -66,8 +66,8 @@ def cantidad_filmaciones_mes(mes):
     # Filtrar las películas por mes y contar la cantidad
     cantidad = df[df['release_date'].dt.month == mes_numero].shape[0]
 
-    return f"{cantidad} es la cantidad de películas que fueron estrenadas en el mes de {mes}."
-
+    #return f"{cantidad} es la cantidad de películas que fueron estrenadas en el mes de {mes}."
+    return {'cantidad_mes':cantidad,'mes':mes}
 
 
 
@@ -98,8 +98,9 @@ async def cantidad_filmaciones_dia(dia):
 
 # Filtrar las películas por día de la semana y contar la cantidad
     cantidad = df[df['release_date'].dt.dayofweek == dia_numero].shape[0]
-    #return {'cantidad':cantidad, 'dia':dia}
-    return f"{cantidad} es la cantidad de películas que fueron estrenadas en los dias {dia}."
+    return {'cantidad':cantidad, 'dia':dia}
+    #return f"{cantidad} es la cantidad de películas que fueron estrenadas en los dias {dia}."
+
 #############################################################################################
 
 # Funcion 3 : def score_titulo( titulo_de_la_filmación ): Se ingresa el título de una filmación esperando como 
@@ -119,8 +120,9 @@ async def score_titulo_2(titulo_de_la_filmacion:str):
     # Si hay coincidencias, seleccionamos la primera fila y obtenemos los valores
     if not df[coincidencia].empty:
         row = df[coincidencia].iloc[0]
-        return f"La pelicula {row['title']} fue estrenada en el año {row['release_year']} con un score de {row['vote_average']}"
-
+        #return f"La pelicula {row['title']} fue estrenada en el año {row['release_year']} con un score de {row['vote_average']}"
+        
+        return {'pelicula':row['title'],'anio':row['release_year'], 'score':row['vote_average']}
     return f"No se encontraron resultados para el título de la filmación: {titulo_de_la_filmacion}"
 #############################################################################################
 
@@ -145,7 +147,8 @@ async def votos_titulo(titulo_de_la_filmacion):
         vote_count = row['vote_count']
         if vote_count < 2000:
             return f"La pelicula {row['title']} no obtuvo suficientes valoraciones"
-        return f"La pelicula {row['title']} fue estrenada en el año {row['release_year']} con un total de {row['vote_count']} valoraciones y un promedio de {row['vote_average']}"
+        return {'pelicula':row['title'],'estreno':row['release_year'],'valoraciones':row['vote_count'],'promedio':row['vote_average']}
+        #return f"La pelicula {row['title']} fue estrenada en el año {row['release_year']} con un total de {row['vote_count']} valoraciones y un promedio de {row['vote_average']}"
 ###############################################################################################################
 
 # Funcion 5: def get_actor( nombre_actor ): Se ingresa el nombre de un actor que se encuentre dentro de un dataset 
@@ -175,37 +178,11 @@ async def get_actor_2(nombre_actor):
     # Calcular el promedio de 'return'
     promedio_return = exito_actor / total_return if total_return != 0 else 0
     
-    #return round(exito_actor,3), cantidad_peliculas, round((promedio_return*100),2)
-    return f"El actor {nombre_actor} ha participado de {cantidad_peliculas} filmaciones. El mismo ha conseguido un retorno de {round(exito_actor,3)}M con un promedio de {round((promedio_return*100),2)}M por filmación."
+    return {'actor':nombre_actor,'cantidad_peliculas':cantidad_peliculas,'retorno_ROI':exito_actor,'promedio_ROI': promedio_return}
+    #return f"El actor {nombre_actor} ha participado de {cantidad_peliculas} filmaciones. El mismo ha conseguido un retorno de {round(exito_actor,3)}M con un promedio de {round((promedio_return*100),2)}M por filmación."
 ########################################################################################
 
-# Fucion 6: def get_director( nombre_director ): Se ingresa el nombre de un director que se encuentre dentro 
-# de un dataset debiendo devolver el éxito del mismo medido a través del retorno. Además, deberá devolver:
-# => el nombre de cada película con la fecha de lanzamiento, 
-# => retorno individual, costo y ganancia de la misma.
-
-@app.get("/get_director_2/{nombre_director}")
-async def get_director_2(nombre_director):
-    director_films = df[df['director_name'].str.contains(nombre_director, case=False, na=False)]
-        
-    # Inicializar el éxito del actor y el total de 'return'
-    exito_director = 0
-    total_return = 0
-    
-    # Calcular el éxito del actor y el total de 'return'
-    for _, row in director_films.iterrows():
-        budget = row['budget']
-        revenue = row['revenue']
-        if revenue != 0:
-            return_value = budget / revenue
-            exito_director += return_value
-            total_return += 1
-    
-    # Calcular el promedio de 'return'
-    promedio_return = exito_director / total_return if total_return != 0 else 0
-    
-    #return round(exito_actor,3), cantidad_peliculas, round((promedio_return*100),2)
-    return f"""El director {nombre_director} ha conseguido un retorno de {round(exito_director,3)}M con un promedio de {round((promedio_return*100),2)}% por filmación."""
+# 
 ##################################################################################################
 
 # Funcion 6: def get_director( nombre_director ): Se ingresa el nombre de un director que se encuentre dentro 
@@ -228,65 +205,6 @@ async def get_director_3(nombre_director):
 ##################################################################################################
 
 # Funcion ML :
-
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.decomposition import PCA
-from sklearn.neighbors import NearestNeighbors
-
-@app.get("/recomendacion_4/{titulo}")
-async def recomendacion_4(titulo):
-    # Cargar el dataframe
-        
-     # Obtener el índice de la película que coincide con el título ingresado (case insensitive)
-    indices = pd.Series(dfML.index, index=dfML['title'].str.lower()).drop_duplicates()
-    titulo_lower = titulo.lower()
-    
-    if titulo_lower not in indices:
-        return "Título no encontrado"
-    
-    idx = indices[titulo_lower]
-    
-    # Seleccionar las características relevantes para el algoritmo KNN
-    features = ['popularity', 'vote_average', 'vote_count', 'genres']
-    X = dfML[features]
-    
-    # Convertir las listas en columnas binarias utilizando MultiLabelBinarizer
-    mlb = MultiLabelBinarizer()
-    encoded_genres = pd.DataFrame(mlb.fit_transform(X['genres']), columns=mlb.classes_, index=X.index)
-    
-    # Convertir los nombres de características numéricas a cadenas
-    numeric_features = X.drop('genres', axis=1)
-    numeric_features.columns = numeric_features.columns.astype(str)
-    
-    # Aplicar PCA para reducir la dimensionalidad
-    pca = PCA(n_components=0.9)  # Mantenemos el 90% de la varianza explicada
-    encoded_genres_pca = pca.fit_transform(encoded_genres)
-    
-    # Concatenar las características numéricas y las características transformadas por PCA
-    X = pd.concat([numeric_features, pd.DataFrame(encoded_genres_pca)], axis=1)
-    
-    # Normalizar las características
-    X = (X - X.mean()) / X.std()
-    
-    # Crear una instancia del algoritmo KNN
-    knn = NearestNeighbors(n_neighbors=6)  # Consideramos 6 vecinos, incluyendo la película seleccionada
-    
-    # Resolvemos el siguiente error con la recomendacion de la propia libreria:  
-    # Feature names are only supported if all input features have string names, but your input has ['int', 'str'] 
-    # as feature name / column name types. If you want feature names to be stored and validated, 
-    # you must convert them all to strings, by using: =>>>>> X.columns = X.columns.astype(str)
-    X.columns = X.columns.astype(str)
-    
-    # Entrenar el modelo KNN
-    knn.fit(X)
-    
-    # Obtener la distancia y los índices de los vecinos más cercanos
-    distances, indic = knn.kneighbors(X.iloc[idx].values.reshape(1, -1))
-    
-    # Obtener los títulos de las películas más similares (excluyendo la película seleccionada)
-    similar_movies = dfML['title'].iloc[indic[0][1:6]]
-    
-    return similar_movies
 
 #################################################################################################
 
@@ -350,4 +268,4 @@ async def recomendacion_5(titulo):
     # Obtener los títulos de las películas más similares (excluyendo la película seleccionada)
     similar_movies = dfML['title'].iloc[indices[0][1:6]]
     
-    return similar_movies
+    return {'recomendadas':similar_movies}
