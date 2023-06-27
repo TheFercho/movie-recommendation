@@ -146,9 +146,11 @@ async def votos_titulo(titulo_de_la_filmacion):
         row = df_matches.iloc[0]
         vote_count = row['vote_count']
         if vote_count < 2000:
+
             return f"La pelicula {row['title']} no obtuvo suficientes valoraciones"
-        return {'pelicula':row['title'],'estreno':row['release_year'],'valoraciones':row['vote_count'],'promedio':row['vote_average']}
+    return {'pelicula':row['title'],'estreno':row['release_year'],'valoraciones':row['vote_count'],'promedio':row['vote_average']}
         #return f"La pelicula {row['title']} fue estrenada en el año {row['release_year']} con un total de {row['vote_count']} valoraciones y un promedio de {row['vote_average']}"
+
 ###############################################################################################################
 
 # Funcion 5: def get_actor( nombre_actor ): Se ingresa el nombre de un actor que se encuentre dentro de un dataset 
