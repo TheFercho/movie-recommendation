@@ -120,10 +120,14 @@ async def score_titulo_2(titulo_de_la_filmacion:str):
     # Si hay coincidencias, seleccionamos la primera fila y obtenemos los valores
     if not df[coincidencia].empty:
         row = df[coincidencia].iloc[0]
+        pelicula = row['title']
+        anio = row['release_year']
+        score = row['vote_average']
         #return f"La pelicula {row['title']} fue estrenada en el año {row['release_year']} con un score de {row['vote_average']}"
         
-        return {'pelicula':row['title'],'anio':row['release_year'], 'score':row['vote_average']}
-    return f"No se encontraron resultados para el título de la filmación: {titulo_de_la_filmacion}"
+        return {'pelicula':pelicula,'anio':anio, 'score':score}
+    return f"No se encontraron resultados para el título de la filmación: {pelicula}"
+
 #############################################################################################
 
 # Funcion 4: def votos_titulo( titulo_de_la_filmación ): Se ingresa el título de una filmación esperando como respuesta el 
@@ -144,12 +148,16 @@ async def votos_titulo(titulo_de_la_filmacion):
     # Si hay coincidencias, seleccionamos la primera fila y verificamos el número de valoraciones
     if not df_matches.empty:
         row = df_matches.iloc[0]
+        pelicula = row['title']
         vote_count = row['vote_count']
+        promedio = row['vote_average']
+        estreno = row['release_year']
+        
         if vote_count < 2000:
 
             return f"La pelicula {row['title']} no obtuvo suficientes valoraciones"
-    return {'pelicula':row['title'],'estreno':row['release_year'],'valoraciones':row['vote_count'],'promedio':row['vote_average']}
-        #return f"La pelicula {row['title']} fue estrenada en el año {row['release_year']} con un total de {row['vote_count']} valoraciones y un promedio de {row['vote_average']}"
+        
+        return {'pelicula':pelicula,'estreno':estreno,'valoraciones':vote_count,'promedio':promedio}
 
 ###############################################################################################################
 
