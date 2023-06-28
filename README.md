@@ -2,7 +2,7 @@
 
 # **Proyecto PI MLOps Recomendación películas.** :heavy_check_mark:
 
-[demo youtube](https://youtu.be/02D6bs30Tkk)
+[Link demo youtube](https://youtu.be/02D6bs30Tkk)
 
 
 ## **El proyecto:** Empezaste a trabajar como **`Data Scientist`** en una start-up que provee servicios de agregación de plataformas de streaming.
