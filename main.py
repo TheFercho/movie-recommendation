@@ -22,7 +22,7 @@ async def index():
     return {'API TheFercho'}
 
 
-df = pd.read_csv('./datasets/merged_movies_credits.csv',encoding='utf-8') 
+df = pd.read_csv('./datasets/merged_movies_credits.csv') # ,encoding='utf-8'
 dfML = pd.read_csv('./datasets/dataset_test_ML.csv',encoding='utf-8')
 
 
@@ -123,10 +123,10 @@ async def score_titulo_2(titulo_de_la_filmacion:str):
         pelicula = row['title']
         anio = row['release_year']
         score = row['vote_average']
-        #return f"La pelicula {row['title']} fue estrenada en el año {row['release_year']} con un score de {row['vote_average']}"
         
-        return {'pelicula':pelicula,'anio':anio, 'score':score}
-    return f"No se encontraron resultados para el título de la filmación: {pelicula}"
+        return f"La pelicula {row['title']} fue estrenada en el año {row['release_year']} con un score de {row['vote_average']}"
+        #return {'pelicula':pelicula,'anio':anio,'score':score}
+    return f"No se encontraron resultados para el título de la filmación: {titulo_de_la_filmacion}"
 
 #############################################################################################
 
@@ -156,8 +156,8 @@ async def votos_titulo(titulo_de_la_filmacion):
         if vote_count < 2000:
 
             return f"La pelicula {row['title']} no obtuvo suficientes valoraciones"
-        
-        return {'pelicula':pelicula,'estreno':estreno,'valoraciones':vote_count,'promedio':promedio}
+        return f"La pelicula{row['title']} tiene {vote_count} valoraciones y un promedio de {promedio}."
+        #return {'pelicula':pelicula,'estreno':estreno,'valoraciones':vote_count,'promedio':promedio}
 
 ###############################################################################################################
 
