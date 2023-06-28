@@ -1,16 +1,16 @@
 
 
-### **Proyecto PI MLOps Recomendación películas.** :heavy_check_mark:
+# **Proyecto PI MLOps Recomendación películas.** :heavy_check_mark:
 
 
 
 
-**El proyecto:** Empezaste a trabajar como **`Data Scientist`** en una start-up que provee servicios de agregación de plataformas de streaming.
+## **El proyecto:** Empezaste a trabajar como **`Data Scientist`** en una start-up que provee servicios de agregación de plataformas de streaming.
 - Crearemos un modelo de ML que soluciona un problema de negocio: un sistema de recomendación que aún no ha sido puesto en marcha! 
 - Para ello debemos realizar un proceso de **ETL + EDA** en los 2 archivos.csv, para luego consultar a traves de una **API**, información relacionada a la propuesta del proyecto.
 
 
-### **ETL**:
+## **ETL**:
 
 - La **limpieza y transformación** de los datos proviene de 2 archivos: movies_dataset.csv y credits.csv. La info de éste último fue incluída a traves de un merge, ya que por tamaño del mismo por fué posible incluir en el repo.
 
@@ -27,7 +27,7 @@
 - Se eliminan las columnas que no serán utilizadas, **`video`**,**`imdb_id`**,**`adult`**,**`original_title`**,**`poster_path`** y **`homepage`**.
 El análisis se encuentra en los archivos [ETL_Movies.csv](https://github.com/TheFercho/movie-recommendation/blob/master/ipynb/ETL_Movies.ipynb) y [ETL_credits.csv](https://github.com/TheFercho/movie-recommendation/blob/master/ipynb/ETL_credits.ipynb)   
 
-### **EDA**:
+## **EDA**:
 
 - Una vez realizado el ETL, se procede a realizar el Análisis exploratorio de datos para sacar conclusiones de la información relevante para el proyecto solicitado y descubrir si hay algún patrón interesante que valga la pena explorar en un análisis posterior. 
 - Entre las herramientas de análisis utilizadas, se muestran **wordClouds**, por ejemplo.
@@ -37,14 +37,15 @@ El análisis se encuentra en los archivos [ETL_Movies.csv](https://github.com/Th
 
 
 
-- **Guía de uso**: Las librerías utilizadas en el proyecto se encuentran en el archivo [requirements.txt](https://github.com/TheFercho/movie-recommendation/blob/master/requirements.txt)
+## **Guía de uso**:
+- Las librerías utilizadas en el proyecto se encuentran en el archivo [requirements.txt](https://github.com/TheFercho/movie-recommendation/blob/master/requirements.txt)
 
 
-### **Características y funcionalidades**: 
+## **Características y funcionalidades**: 
 
-**Desarrollo API**:   Se utiliza el framework **FastAPI** para disponibilizar los datos de la empresa, **uvicorn** para el desarrollo a nivel local y **Render** para acceder a nuestra API desde 
+- **Desarrollo API**:   Se utiliza el framework **FastAPI** para disponibilizar los datos de la empresa, **uvicorn** para el desarrollo a nivel local y **Render** para acceder a nuestra API desde 
 
-Se crean **6 funciones** para los endpoints que se consumirán en la API:
+- Se crean **6 funciones** para los endpoints que se consumirán en la API:
   
 - def **cantidad_filmaciones_mes( *`Mes`* )**:
     Se ingresa un mes en idioma Español. Debe devolver la cantidad de películas que fueron estrenadas en el mes consultado en la totalidad del dataset.
@@ -68,19 +69,29 @@ Se crean **6 funciones** para los endpoints que se consumirán en la API:
 - def **get_director( *`nombre_director`* )**:
     Se ingresa el nombre de un director que se encuentre dentro de un dataset debiendo devolver el éxito del mismo medido a través del retorno. Además, deberá devolver el nombre de cada película con la fecha de lanzamiento, retorno individual, costo y ganancia de la misma.
 
-### **Machine learning**:
+## **Machine learning**:
 
 - def **recomendacion( *`titulo`* )**:
     Se ingresa el nombre de una película y te recomienda las similares en una lista de 5 valores.
 
-**Fuente de datos** 
-[Dataset](https://drive.google.com/drive/folders/1nvSjC2JWUH48o3pb8xlKofi8SNHuNWeu): Carpeta con los 2 archivos con datos que requieren ser procesados (movies_dataset.csv y credits.csv), tengan en cuenta que hay datos que estan anidados (un diccionario o una lista como valores en la fila).
-[Diccionario de datos](https://docs.google.com/spreadsheets/d/1QkHH5er-74Bpk122tJxy_0D49pJMIwKLurByOfmxzho/edit#gid=0): Diccionario con algunas descripciones de las columnas disponibles en el dataset.
+- Una vez que toda la data es consumible por la API, está lista para consumir por los departamentos de Analytics y Machine Learning, y nuestro EDA 
+nos permite entender bien los datos a los que tenemos acceso, es hora de entrenar nuestro modelo de machine learning para armar un sistema de 
+recomendación de películas.
 
-**Links**: https://ferflix.onrender.com/docs |
-       https://fastapi.tiangolo.com/es/#requisitos |
-       https://github.com/TheFercho/movie-recommendation |
-       https://www.uvicorn.org/
+## **Fuente de datos**: 
+
+- [Dataset](https://drive.google.com/drive/folders/1nvSjC2JWUH48o3pb8xlKofi8SNHuNWeu): Carpeta con los 2 archivos con datos que requieren ser procesados (movies_dataset.csv y credits.csv), tengan en cuenta que hay datos que estan anidados (un diccionario o una lista como valores en la fila).
+
+- [Diccionario de datos](https://docs.google.com/spreadsheets/d/1QkHH5er-74Bpk122tJxy_0D49pJMIwKLurByOfmxzho/edit#gid=0): Diccionario con algunas descripciones de las columnas disponibles en el dataset.
+
+- **Links**:
+    https://ferflix.onrender.com/docs **`Deployment`**:
+
+    https://fastapi.tiangolo.com/es/#requisitos 
+
+    https://github.com/TheFercho/movie-recommendation 
+
+    https://www.uvicorn.org/
 
        
  
